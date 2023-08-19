@@ -30,3 +30,22 @@
   filter: blur(72px);
 
 }
+
+.button{
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  /* outline: none; */
+  border-radius: 0.5rem;
+  background: var(--buttonBg);
+  transition: all 100ms ease-out;
+}
+
+.button:hover{
+  cursor: pointer;
+  color: var(--orange);
+  background: transparent;
+  border: 2px solid var(--orange);
+}
