@@ -10,7 +10,7 @@ const userSchema = mongoose.Schema(
       type: "string",
       required: true,
     },
-    firstName: {
+    firstname: {
       type: "string",
       required: true,
     },
@@ -20,7 +20,7 @@ const userSchema = mongoose.Schema(
     },
     isAdmin: {
       type: "boolean",
-      required: true,
+      default: false,
     },
     profilePicture: String,
     coverPicture: String,

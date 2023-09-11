@@ -1,5 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
+import bodyParser from "body-parser";
+
 import dotenv from "dotenv";
 import cors from "cors";
 import connectDb from "./Db/config.js";
@@ -16,6 +18,8 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(morgan("dev"));
+app.use(bodyParser.json({ limit: "30mb", extended: true }));
+app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 
 // Routes
 app.use("/api/v1/auth", AuthRoutes);
