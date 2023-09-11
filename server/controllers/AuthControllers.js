@@ -1,56 +1,46 @@
 // import { genSalt } from "bcryptjs";
 // import jwt from "JsonWebToken";
 import userModel from "../models/UserModels.js";
+import bcrypt from "bcrypt";
 
 // registers
 
 export const registerUser = async (req, res) => {
-  const { username, firstname, lastname, password } = req.body;
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(req.body.password, salt);
+  req.body.password = hashedPassword;
 
-  const newUser = new userModel({ username, firstname, lastname, password });
+  const newUser = new userModel(req.body);
+  const { username } = req.body;
+
   try {
-    await newUser.save();
-    res.status(200).json(newUser);
-  } catch (err) {
-    res.status(500).json({ err: err });
+    // IF USER EXIST
+    const oldUser = await userModel.findOne({ username });
+
+    if (oldUser) {
+      return res.status(400).json({
+        message: "User already registered",
+      });
+    }
+
+    // IF NEW USER
+
+    const user = await newUser.save();
+    // const token = jwt.sign(
+    //   {
+    //     username: user.username,
+    //     id: user._id,
+    //   },
+    //   process.env.JWT_KEY,
+    //   {
+    //     expiresIn: "1h",
+    //   }
+    // );
+    res.status(200).json({ user });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
-// export const registerUser = async (req, res) => {
-//   const salt = await bcrypt.genSalt(10);
-//   const hashedPassword = await bcrypt.hash(req.body.password, salt);
-//   req.body.password = hashedPassword;
-
-//   const newUser = new userModel(req.body);
-//   const { username } = req.body;
-
-//   try {
-//     // IF USER EXIST
-//     const oldUser = await userModel.findOne({ username });
-
-//     if (oldUser) {
-//       return res.status(400).json({
-//         message: "User already registered",
-//       });
-//     }
-
-//     // IF NEW USER
-
-//     const user = await newUser.save();
-//     const token = jwt.sign(
-//       {
-//         username: user.username,
-//         id: user._id,
-//       },
-//       process.env.JWT_KEY,
-//       {
-//         expiresIn: "1h",
-//       }
-//     );
-//     res.status(200).json({ user, token });
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// };
 
 export const loginUser = async (req, res) => {
   const { username, password } = req.body;
@@ -62,13 +52,14 @@ export const loginUser = async (req, res) => {
       if (!validity) {
         res.status(401).json("Wrong password");
       } else {
-        const token = jwt.sign(
-          { username: user.username, id: user._id },
-          process.env.JWT_KEY,
-          { expiresIn: "1h" }
-        );
+        // const token = jwt.sign(
+        //   { username: user.username, id: user._id },
+        //   process.env.JWT_KEY,
+        //   { expiresIn: "1h" }
+        // );
+        res.status(200).json(user);
       }
-      res.status(200).json({ user, token });
+      // res.status(200).json({ user, token });
     } else {
       res.status(404).json("User not found");
     }

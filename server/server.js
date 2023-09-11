@@ -9,6 +9,7 @@ import morgan from "morgan";
 
 // Routes
 import AuthRoutes from "./routes/AuthRoutes.js";
+import UserRoutes from "./routes/UserRoutes.js";
 
 dotenv.config();
 connectDb();
@@ -21,14 +22,17 @@ app.use(morgan("dev"));
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 
-// Routes
-app.use("/api/v1/auth", AuthRoutes);
+// TEST ROUTE
 app.use("/test", (req, res) => {
   console.log("Test Purpose");
   res.json({
     message: "Hello There",
   });
 });
+
+// Routes
+app.use("/api/v1/auth", AuthRoutes);
+app.use("/api/v1/users", UserRoutes);
 
 const port = process.env.PORT || 8002;
 app.listen(port, () => {
