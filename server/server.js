@@ -8,8 +8,7 @@ import connectDb from "./Db/config.js";
 import morgan from "morgan";
 
 // Routes
-import AuthRoutes from "./routes/AuthRoutes.js";
-import UserRoutes from "./routes/UserRoutes.js";
+import { PostRoutes, UserRoutes, AuthRoutes } from "./routes/index.js";
 
 dotenv.config();
 connectDb();
@@ -33,6 +32,7 @@ app.use("/test", (req, res) => {
 // Routes
 app.use("/api/v1/auth", AuthRoutes);
 app.use("/api/v1/users", UserRoutes);
+app.use("/api/v1/post", PostRoutes);
 
 const port = process.env.PORT || 8002;
 app.listen(port, () => {

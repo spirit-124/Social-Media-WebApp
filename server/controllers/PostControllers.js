@@ -1,6 +1,6 @@
-import PostModel from "../models/PostModel";
+import PostModel from "../models/PostModel.js";
 import mongoose from "mongoose";
-import userModel from "../models/UserModels";
+import userModel from "../models/UserModels.js";
 
 // Create New Post ==============================
 export const createNewPost = async (req, res) => {
