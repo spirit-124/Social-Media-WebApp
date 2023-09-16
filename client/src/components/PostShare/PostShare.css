@@ -35,7 +35,7 @@
     justify-content: space-around;
 }
 
-.option{
+.options{
     padding: 5px;
     padding-inline: 10px;
     border-radius: 10px;
@@ -45,7 +45,7 @@
 
 }
 
-.option:hover{
+.options:hover{
     cursor: pointer;
 }
 
@@ -54,4 +54,20 @@
     padding-left: 20px;
     padding-right: 20px;
     font-size: 12px;
+}
+
+.previewImage{
+    position: relative;
+}
+.previewImage>svg{
+    position: absolute;
+    right: 1rem;
+    top: 0.5rem;
+    cursor: pointer;
+}
+.previewImage>img{
+    max-height: 20rem;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 0.5rem;
 }
