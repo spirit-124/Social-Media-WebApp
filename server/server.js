@@ -8,7 +8,13 @@ import connectDb from "./Db/config.js";
 import morgan from "morgan";
 
 // Routes
-import { PostRoutes, UserRoutes, AuthRoutes } from "./routes/index.js";
+import {
+  PostRoutes,
+  UserRoutes,
+  AuthRoutes,
+  ChatRoutes,
+  MesssageRoutes,
+} from "./routes/index.js";
 
 dotenv.config();
 connectDb();
@@ -33,6 +39,8 @@ app.use("/test", (req, res) => {
 app.use("/api/v1/auth", AuthRoutes);
 app.use("/api/v1/users", UserRoutes);
 app.use("/api/v1/post", PostRoutes);
+app.use("/api/v1/chat", ChatRoutes);
+app.use("/api/v1/Message", MesssageRoutes);
 
 const port = process.env.PORT || 8002;
 app.listen(port, () => {

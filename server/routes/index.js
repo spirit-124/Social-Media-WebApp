@@ -1,5 +1,7 @@
 import PostRoutes from "./PostRoutes.js";
 import UserRoutes from "./UserRoutes.js";
 import AuthRoutes from "./AuthRoutes.js";
+import ChatRoutes from "./ChatRoutes.js";
+import MesssageRoutes from "./MessageRoutes.js";
 
-export { PostRoutes, UserRoutes, AuthRoutes };
+export { PostRoutes, UserRoutes, AuthRoutes, ChatRoutes, MesssageRoutes };

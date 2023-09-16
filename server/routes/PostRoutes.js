@@ -6,7 +6,7 @@ import {
   updatePost,
   postDelete,
   likePost,
-  getTimelinePost,
+  getTimelinePosts,
 } from "../controllers/PostControllers.js";
 
 router.post("/", createNewPost);
@@ -14,6 +14,5 @@ router.get("/:id", getPost);
 router.put("/:id", updatePost);
 router.delete("/:id", postDelete);
 router.put("/:id/like", likePost);
-router.get;
-"/:id", getTimelinePost;
+router.get("/:id", getTimelinePosts);
 export default router;

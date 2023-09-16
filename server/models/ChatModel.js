@@ -9,5 +9,5 @@ const ChatSchema = new mongoose.Schema(
   }
 );
 
-const ChatModel = new mongoose.Model("chat", ChatSchema);
+const ChatModel = new mongoose.model("chat", ChatSchema);
 export default ChatModel;
