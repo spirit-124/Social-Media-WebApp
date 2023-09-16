@@ -9,8 +9,8 @@ function App() {
       <div className="blur" style={{ top: "30rem", left: "-8rem" }}></div>
       {/* <div className="blur"></div> */}
       {/* <Home /> */}
-      {/* <Auth /> */}
-      <Profile />
+      <Auth />
+      {/* <Profile /> */}
     </div>
   );
 }
