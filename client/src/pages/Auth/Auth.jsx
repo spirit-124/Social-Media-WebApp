@@ -1,10 +1,14 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import "./Auth.css";
 import Logo from "../../img/logo.png";
+import { logIn, signUp } from "../../actions/AuthActions";
 
 const Auth = () => {
+  const dispatch = useDispatch();
+  const loading = useSelector((state) => state.authReducer.loading);
+  console.log(loading);
   const [isSignUp, SetIsSignUp] = useState(true);
   const [data, setData] = useState({
     firstname: "",
@@ -14,7 +18,6 @@ const Auth = () => {
     username: "",
   });
   const [confirmpass, setConfirmPass] = useState(true);
-  const dispatch = useDispatch((state) => {});
 
   const handleChange = (event) => {
     setData({
@@ -25,7 +28,7 @@ const Auth = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (isSignUp) {
-      data.password !== data.confirmpass
+      data.password === data.confirmpass
         ? dispatch(signUp(data))
         : setConfirmPass(false);
     } else {
@@ -135,8 +138,12 @@ const Auth = () => {
                 : "Don't have an account yet? Sign up"}
             </span>
           </div>
-          <button className="button infoButton" type="submit">
-            {isSignUp ? "Sign Up" : "Sign In"}
+          <button
+            className="button infoButton"
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? "Loading..." : isSignUp ? "Sign Up" : "Sign In"}
           </button>
         </form>
       </div>
