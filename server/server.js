@@ -14,6 +14,7 @@ import {
   AuthRoutes,
   ChatRoutes,
   MesssageRoutes,
+  UploadRoutes,
 } from "./routes/index.js";
 
 dotenv.config();
@@ -39,6 +40,7 @@ app.use("/test", (req, res) => {
 app.use("/api/v1/auth", AuthRoutes);
 app.use("/api/v1/users", UserRoutes);
 app.use("/api/v1/post", PostRoutes);
+app.use("/api/v1/upload", UploadRoutes);
 app.use("/api/v1/chat", ChatRoutes);
 app.use("/api/v1/Message", MesssageRoutes);
 
