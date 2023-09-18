@@ -28,6 +28,10 @@ app.use(morgan("dev"));
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 
+// To server images for public
+
+app.use(express.static("public"));
+app.use("/images", express.static("images"));
 // TEST ROUTE
 app.use("/test", (req, res) => {
   console.log("Test Purpose");

@@ -90,7 +90,7 @@ export const getTimelinePosts = async (req, res) => {
 
   try {
     const currentUserPosts = await PostModel.find({ userId: userId });
-    const followingPosts = await UserModel.aggregate([
+    const followingPosts = await userModel.aggregate([
       {
         $match: {
           _id: new mongoose.Types.ObjectId(userId),
@@ -98,7 +98,7 @@ export const getTimelinePosts = async (req, res) => {
       },
       {
         $lookup: {
-          from: "posts",
+          from: "Posts",
           localField: "following",
           foreignField: "userId",
           as: "followingPosts",

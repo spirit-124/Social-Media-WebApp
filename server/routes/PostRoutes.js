@@ -14,5 +14,5 @@ router.get("/:id", getPost);
 router.put("/:id", updatePost);
 router.delete("/:id", postDelete);
 router.put("/:id/like", likePost);
-router.get("/:id", getTimelinePosts);
+router.get("/:id/timeline", getTimelinePosts);
 export default router;
