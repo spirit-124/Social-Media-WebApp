@@ -7,7 +7,7 @@ const Conversation = ({ data, currentUser }) => {
     const userId = data.members.find((id) => id !== currentUser);
     console.log(userId);
     const getUserData = async () => {
-      const { data } = await getUser(userId);
+      // const { data } = await getUser(userId);
       setUserData(data);
     };
   }, []);
