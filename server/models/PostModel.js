@@ -11,7 +11,7 @@ const PostSchema = mongoose.Schema(
     image: String,
   },
   {
-    timeStamps: true,
+    timestamps: true,
   }
 );
 

@@ -83,7 +83,7 @@ export const followUser = async (req, res) => {
         res.status(403).json("User is already Followed by you");
       }
     } catch (err) {
-      res.status(500), json(err);
+      res.status(500).json(err);
     }
   }
 };
@@ -109,7 +109,7 @@ export const UnFollowUser = async (req, res) => {
         res.status(403).json("User is not Followed by you");
       }
     } catch (err) {
-      res.status(500), json(err);
+      res.status(500).json(err);
     }
   }
 };

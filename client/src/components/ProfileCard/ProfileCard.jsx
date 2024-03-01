@@ -2,8 +2,10 @@ import React from "react";
 import "./ProfileCard.css";
 import Cover from "../../img/cover.jpg";
 import Profile from "../../img/profileImage.jpg";
+import { useSelector, useDispatch } from "react-redux";
 
 const ProfileCard = () => {
+  const { user } = useSelector((state) => state.authReducer.authData);
   const profilePage = true;
   return (
     <div className="ProfileCard">

@@ -10,14 +10,15 @@ const Posts = () => {
   const { posts, loading } = useSelector((state) => state.postReducer);
 
   useEffect(() => {
-    // dispatch(getTimelinePosts(user._id));
+    dispatch(getTimelinePosts(user._id));
   }, []);
   return (
     <div className="Posts">
       {loading
         ? "Fetching..."
-        : PostsData.map((post, id) => {
-            return <Post data={post} id={id} />;
+        : posts.map((post, id) => {
+            // return console.log(post);
+            return <Post data={post} key={id} />;
           })}
     </div>
   );

@@ -1,4 +1,4 @@
-import * as UploadApi from "../api/UploadRequest";
+import * as UploadApi from "../api/UploadRequest.js";
 export const UploadImage = (formData) => async (dispatch) => {
   try {
     await UploadApi.uploadImage(formData);

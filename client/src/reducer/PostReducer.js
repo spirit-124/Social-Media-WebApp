@@ -1,32 +1,40 @@
-const initialState = {
-  posts: null,
-  loading: false,
-  error: false,
-  uploading: false,
-};
+// const initialState = {
+//   posts: [],
+//   loading: false,
+//   error: false,
+//   uploading: false,
+// };
 
-const postReducer = (state = initialState, action) => {
+const postReducer = (
+  state = {
+    posts: [],
+    loading: false,
+    error: false,
+    uploading: false,
+  },
+  action
+) => {
   switch (action.type) {
     case "UPLOAD_START":
       return {
         ...state,
         error: false,
         uploading: true,
-        posts: null,
+        // posts: null,
       };
     case "UPLOAD_SUCESS":
       return {
         ...state,
-        loading: false,
         error: false,
         uploading: false,
-        posts: [action.post, ...state.posts],
+        posts: [action.data, ...state.posts],
       };
     case "UPLOAD_FAIL":
       return {
         ...state,
         uploading: false,
-        posts: null,
+        error: true,
+        // posts: null,
       };
     // belongs to Posts.jsx
     case "RETREIVING_START":

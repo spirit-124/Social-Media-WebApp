@@ -2,8 +2,7 @@ import jwt from "jsonwebtoken";
 import userModel from "../models/UserModels.js";
 import bcrypt from "bcrypt";
 
-// registers
-
+// registers a new user
 export const registerUser = async (req, res) => {
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(req.body.password, salt);
@@ -36,6 +35,7 @@ export const registerUser = async (req, res) => {
 
     res.status(200).json({ user, token });
   } catch (error) {
+    console.log(error.message);
     res.status(500).json({ error: error.message });
   }
 };
@@ -64,6 +64,7 @@ export const loginUser = async (req, res) => {
       res.status(404).json("User not found");
     }
   } catch (error) {
+    console.log(error.message);
     res.status(500).json({ error: error.message });
   }
 };
