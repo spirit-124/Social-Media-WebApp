@@ -10,7 +10,7 @@ import {
 import authMiddleware from "../middleware/AuthMiddleware.js";
 
 router.get("/:id", getUser);
-router.put("/:id", authMiddleware, updateUser);
+router.put("/:id", updateUser);
 router.delete("/:id", deleteUser);
 router.put("/:id/follow", authMiddleware, followUser);
 router.put("/:id/unfollow", UnFollowUser);

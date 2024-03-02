@@ -1,5 +1,6 @@
 import UserModels from "../models/UserModels.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 // getUser
 export const getUser = async (req, res) => {
@@ -22,8 +23,8 @@ export const getUser = async (req, res) => {
 
 export const updateUser = async (req, res) => {
   const id = req.params.id;
-  const { currentUserid, currentUserAdminStatus, password } = req.body;
-  if (currentUserAdminStatus || currentUserid === id) {
+  const { _id, currentUserAdminStatus, password } = req.body;
+  if (_id === id) {
     try {
       if (password) {
         const salt = await bcrypt.genSalt(10);
@@ -32,6 +33,11 @@ export const updateUser = async (req, res) => {
       const user = await UserModels.findByIdAndUpdate(id, req.body, {
         new: true,
       });
+      const token = jwt.sign(
+        { username: user.username, id: user._id },
+        process.env.JWTKEY,
+        { expiresIn: "1h" }
+      );
       res.status(200).json(user);
     } catch (error) {
       res.status(500).json("Not Authenticated");
