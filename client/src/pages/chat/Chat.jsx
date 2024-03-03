@@ -1,22 +1,25 @@
-import React, { useEffect, useState } from "react";
-import "./Chat.css";
-import Home from "../../img/home.png";
-import Noti from "../../img/noti.png";
-import Comment from "../../img/comment.png";
-import { UilSetting } from "@iconscout/react-unicons";
-import { LogoSearch } from "../../components";
-import { useSelector } from "react-redux";
-import { userChat } from "../../api/ChatRequest";
-import Conversation from "../../components/conversation/Conversation";
-import { Link } from "react-router-dom";
+import React, { useRef, useState } from "react";
 import ChatBox from "../../components/ChatBox/ChatBox";
+import Conversation from "../../components/conversation/Conversation";
+import LogoSearch from "../../components/LogoSearch/LogoSearch";
+import NavIcons from "../../components/navIcons/NavIcons";
+import "./Chat.css";
+import { useEffect } from "react";
+import { userChat } from "../../api/ChatRequest";
+import { useDispatch, useSelector } from "react-redux";
+import { io } from "socket.io-client";
 
 const Chat = () => {
+  const dispatch = useDispatch();
+  const socket = useRef();
   const { user } = useSelector((state) => state.authReducer.authData);
-  console.log(user);
-  const [chats, setChats] = useState([]);
-  const [currentChat, setCurrentChat] = useState(null);
 
+  const [chats, setChats] = useState([]);
+  const [onlineUsers, setOnlineUsers] = useState([]);
+  const [currentChat, setCurrentChat] = useState(null);
+  const [sendMessage, setSendMessage] = useState(null);
+  const [receivedMessage, setReceivedMessage] = useState(null);
+  // Get the chat in chat section
   useEffect(() => {
     const getChats = async () => {
       try {
@@ -27,10 +30,41 @@ const Chat = () => {
       }
     };
     getChats();
+  }, [user._id]);
+
+  // Connect to Socket.io
+  useEffect(() => {
+    socket.current = io("ws://localhost:8800");
+    socket.current.emit("new-user-add", user._id);
+    socket.current.on("get-users", (users) => {
+      setOnlineUsers(users);
+    });
   }, [user]);
+
+  // Send Message to socket server
+  useEffect(() => {
+    if (sendMessage !== null) {
+      socket.current.emit("send-message", sendMessage);
+    }
+  }, [sendMessage]);
+
+  // Get the message from socket server
+  useEffect(() => {
+    socket.current.on("recieve-message", (data) => {
+      console.log(data);
+      setReceivedMessage(data);
+    });
+  }, []);
+
+  const checkOnlineStatus = (chat) => {
+    const chatMember = chat.members.find((member) => member !== user._id);
+    const online = onlineUsers.find((user) => user.userId === chatMember);
+    return online ? true : false;
+  };
+
   return (
     <div className="Chat">
-      {/* Left Side====================================== */}
+      {/* Left Side */}
       <div className="Left-side-chat">
         <LogoSearch />
         <div className="Chat-container">
@@ -42,28 +76,29 @@ const Chat = () => {
                   setCurrentChat(chat);
                 }}
               >
-                <Conversation data={chat} currentUser={user._id} />
+                <Conversation
+                  data={chat}
+                  currentUser={user._id}
+                  online={checkOnlineStatus(chat)}
+                />
               </div>
             ))}
           </div>
         </div>
       </div>
-      {/* Right-side===================================== */}
+
+      {/* Right Side */}
+
       <div className="Right-side-chat">
         <div style={{ width: "20rem", alignSelf: "flex-end" }}>
-          <div className="navIcons">
-            <Link to="../home">
-              <img src={Home} alt="" />
-            </Link>
-            <UilSetting />
-            <img src={Noti} alt="" />
-            <Link to="../chat">
-              <img src={Comment} alt="" />
-            </Link>
-          </div>
-          {/* Chat Body  */}
+          <NavIcons />
         </div>
-        <ChatBox chat={currentChat} currentUser={user._id}></ChatBox>
+        <ChatBox
+          chat={currentChat}
+          currentUser={user._id}
+          setSendMessage={setSendMessage}
+          receivedMessage={receivedMessage}
+        />
       </div>
     </div>
   );
