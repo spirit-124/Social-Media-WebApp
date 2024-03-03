@@ -23,8 +23,8 @@ export const getUser = async (req, res) => {
 
 export const updateUser = async (req, res) => {
   const id = req.params.id;
-  const { _id, currentUserAdminStatus, password } = req.body;
-  if (_id === id) {
+  const { _id, currentUserAdmin, password } = req.body;
+  if (id === _id) {
     try {
       if (password) {
         const salt = await bcrypt.genSalt(10);
@@ -35,11 +35,12 @@ export const updateUser = async (req, res) => {
       });
       const token = jwt.sign(
         { username: user.username, id: user._id },
-        process.env.JWTKEY,
+        process.env.JWT_KEY,
         { expiresIn: "1h" }
       );
       res.status(200).json(user);
     } catch (error) {
+      console.log(error);
       res.status(500).json("Not Authenticated");
     }
   } else {

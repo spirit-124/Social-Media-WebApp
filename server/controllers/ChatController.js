@@ -7,9 +7,9 @@ export const createChat = async (req, res) => {
   });
   try {
     const result = await newChat.save();
-    res.status(200).send(result);
+    res.status(200).json(result);
   } catch (err) {
-    res.status(500).send(err);
+    res.status(500).json(err);
   }
 };
 
@@ -20,7 +20,7 @@ export const userChat = async (req, res) => {
     });
     res.status(200).json(chat);
   } catch (err) {
-    res.status(500).send(err);
+    res.status(500).json(err);
   }
 };
 

@@ -46,7 +46,7 @@ app.use("/api/v1/users", UserRoutes);
 app.use("/api/v1/post", PostRoutes);
 app.use("/api/v1/upload", UploadRoutes);
 app.use("/api/v1/chat", ChatRoutes);
-app.use("/api/v1/Message", MesssageRoutes);
+app.use("/api/v1/message", MesssageRoutes);
 
 const port = process.env.PORT || 8002;
 app.listen(port, () => {

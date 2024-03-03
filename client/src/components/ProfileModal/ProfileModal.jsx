@@ -8,7 +8,7 @@ import { updateUser } from "../../actions/UserAction";
 function ProfileModal({ modalOpened, setModalOpened, data }) {
   const theme = useMantineTheme();
   const { password, ...other } = data;
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState(other);
   const [coverImage, setCoverImage] = useState(null);
   const [profileImage, setProfileImage] = useState(null);
   const dispatch = useDispatch();
