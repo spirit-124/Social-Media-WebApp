@@ -1,15 +1,14 @@
+import React from "react";
+import Posts from "../Posts/Posts";
 import PostShare from "../PostShare/PostShare";
-import Posts from "../posts/Posts";
-import "./PostSide";
+import "./PostSide.css";
 
 const PostSide = () => {
   return (
-    <>
-      <div className="PostSide">
-        <PostShare />
-        <Posts />
-      </div>
-    </>
+    <div className="PostSide">
+      <PostShare/>
+      <Posts/>
+    </div>
   );
 };
 

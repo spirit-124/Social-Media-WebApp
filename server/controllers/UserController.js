@@ -1,122 +1,148 @@
-import UserModels from "../models/UserModels.js";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import UserModel from "../models/userModel.js";
 
-// getUser
+import bcrypt from "bcrypt";
+import jwt from 'jsonwebtoken'
+// Get a User
 export const getUser = async (req, res) => {
   const id = req.params.id;
-  try {
-    const user = await UserModels.findById(id);
 
+  try {
+    const user = await UserModel.findById(id);
     if (user) {
-      const { password, ...otherdetails } = user._doc;
-      res.status(200).json(otherdetails);
+      const { password, ...otherDetails } = user._doc;
+
+      res.status(200).json(otherDetails);
     } else {
-      res.status(404).json("No such user");
+      res.status(404).json("No such User");
     }
   } catch (error) {
     res.status(500).json(error);
   }
 };
 
-// Update User
+// Get all users
+export const getAllUsers = async (req, res) => {
+
+  try {
+    let users = await UserModel.find();
+    users = users.map((user)=>{
+      const {password, ...otherDetails} = user._doc
+      return otherDetails
+    })
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+// udpate a user
 
 export const updateUser = async (req, res) => {
   const id = req.params.id;
+  // console.log("Data Received", req.body)
   const { _id, currentUserAdmin, password } = req.body;
+  
   if (id === _id) {
     try {
+      // if we also have to update password then password will be bcrypted again
       if (password) {
         const salt = await bcrypt.genSalt(10);
         req.body.password = await bcrypt.hash(password, salt);
       }
-      const user = await UserModels.findByIdAndUpdate(id, req.body, {
+      // have to change this
+      const user = await UserModel.findByIdAndUpdate(id, req.body, {
         new: true,
       });
       const token = jwt.sign(
         { username: user.username, id: user._id },
-        process.env.JWT_KEY,
+        process.env.JWTKEY,
         { expiresIn: "1h" }
       );
-      res.status(200).json(user);
+      console.log({user, token})
+      res.status(200).json({user, token});
     } catch (error) {
-      console.log(error);
-      res.status(500).json("Not Authenticated");
+      console.log("Error agya hy")
+      res.status(500).json(error);
     }
   } else {
     res
       .status(403)
-      .json("Access Denied!! You can only update Your own profile.");
+      .json("Access Denied! You can update only your own Account.");
   }
 };
 
-// Delete user
-
+// Delete a user
 export const deleteUser = async (req, res) => {
   const id = req.params.id;
-  const { currentUserAdminStatus, currentUserId } = req.body;
 
-  if (currentUserAdminStatus || currentUserId === id) {
+  const { currentUserId, currentUserAdmin } = req.body;
+
+  if (currentUserId == id || currentUserAdmin) {
     try {
-      await UserModels.findByIdAndDelete(id);
-      res.status(200).json("User Deleted Successfully");
+      await UserModel.findByIdAndDelete(id);
+      res.status(200).json("User Deleted Successfully!");
     } catch (error) {
-      res.status(500).json(error.message);
+      res.status(500).json(err);
     }
   } else {
-    res
-      .status(403)
-      .json("Access Denied!! You can only Delete Your own profile.");
+    res.status(403).json("Access Denied!");
   }
 };
 
-// Follow of User
+// Follow a User
+// changed
 export const followUser = async (req, res) => {
   const id = req.params.id;
-  const { curentUserId } = req.body;
-
-  if (curentUserId === id) {
+  const { _id } = req.body;
+  console.log(id, _id)
+  if (_id == id) {
     res.status(403).json("Action Forbidden");
   } else {
     try {
-      const followUser = await UserModels.findById(id);
-      const followingUser = await UserModels.findById(curentUserId);
+      const followUser = await UserModel.findById(id);
+      const followingUser = await UserModel.findById(_id);
 
-      if (!followUser.followers.includes(curentUserId)) {
-        await followUser.updateOne({ $push: { followers: curentUserId } });
+      if (!followUser.followers.includes(_id)) {
+        await followUser.updateOne({ $push: { followers: _id } });
         await followingUser.updateOne({ $push: { following: id } });
-        res.status(200).json("Following!!");
+        res.status(200).json("User followed!");
       } else {
-        res.status(403).json("User is already Followed by you");
+        res.status(403).json("you are already following this id");
       }
-    } catch (err) {
-      res.status(500).json(err);
+    } catch (error) {
+      console.log(error)
+      res.status(500).json(error);
     }
   }
 };
 
-// UnFollow Cntroller ============================================
-
-export const UnFollowUser = async (req, res) => {
+// Unfollow a User
+// changed
+export const unfollowUser = async (req, res) => {
   const id = req.params.id;
-  const { curentUserId } = req.body;
+  const { _id } = req.body;
 
-  if (curentUserId === id) {
-    res.status(403).json("Action Forbidden");
-  } else {
+  if(_id === id)
+  {
+    res.status(403).json("Action Forbidden")
+  }
+  else{
     try {
-      const followUser = await UserModels.findById(id);
-      const followingUser = await UserModels.findById(curentUserId);
+      const unFollowUser = await UserModel.findById(id)
+      const unFollowingUser = await UserModel.findById(_id)
 
-      if (followUser.followers.includes(curentUserId)) {
-        await followUser.updateOne({ $pull: { followers: curentUserId } });
-        await followingUser.updateOne({ $pull: { following: id } });
-        res.status(200).json("Unfollowed");
-      } else {
-        res.status(403).json("User is not Followed by you");
+
+      if (unFollowUser.followers.includes(_id))
+      {
+        await unFollowUser.updateOne({$pull : {followers: _id}})
+        await unFollowingUser.updateOne({$pull : {following: id}})
+        res.status(200).json("Unfollowed Successfully!")
       }
-    } catch (err) {
-      res.status(500).json(err);
+      else{
+        res.status(403).json("You are not following this User")
+      }
+    } catch (error) {
+      res.status(500).json(error)
     }
   }
 };

@@ -1,149 +1,162 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
 import "./Auth.css";
 import Logo from "../../img/logo.png";
-import { logIn, signUp } from "../../actions/AuthActions";
+import { logIn, signUp } from "../../actions/AuthActions.js";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Auth = () => {
-  const dispatch = useDispatch();
-  const loading = useSelector((state) => state.authReducer.loading);
-  const [isSignUp, SetIsSignUp] = useState(true);
-  const [data, setData] = useState({
+  const initialState = {
     firstname: "",
     lastname: "",
+    username: "",
     password: "",
     confirmpass: "",
-    username: "",
-  });
-  const [confirmpass, setConfirmPass] = useState(true);
-
-  const handleChange = (event) => {
-    setData({
-      ...data,
-      [event.target.name]: event.target.value,
-    });
   };
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const loading = useSelector((state) => state.authReducer.loading);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [isSignUp, setIsSignUp] = useState(false);
+
+  const [data, setData] = useState(initialState);
+
+  const [confirmPass, setConfirmPass] = useState(true);
+
+  // const dispatch = useDispatch()
+
+  // Reset Form
+  const resetForm = () => {
+    setData(initialState);
+    setConfirmPass(confirmPass);
+  };
+
+  // handle Change in input
+  const handleChange = (e) => {
+    setData({ ...data, [e.target.name]: e.target.value });
+  };
+
+  // Form Submission
+  const handleSubmit = (e) => {
+    setConfirmPass(true);
+    e.preventDefault();
     if (isSignUp) {
       data.password === data.confirmpass
-        ? dispatch(signUp(data))
+        ? dispatch(signUp(data, navigate))
         : setConfirmPass(false);
     } else {
-      dispatch(logIn(data));
+      dispatch(logIn(data, navigate));
     }
   };
 
-  const resetForm = () => {
-    setConfirmPass(true);
-    setData({
-      firstname: "",
-      lastname: "",
-      password: "",
-      confirmpass: "",
-      username: "",
-    });
-  };
   return (
     <div className="Auth">
+      {/* left side */}
+
       <div className="a-left">
         <img src={Logo} alt="" />
+
         <div className="Webname">
           <h1>ZKC Media</h1>
           <h6>Explore the ideas throughout the world</h6>
         </div>
       </div>
-      {/* RightSide  */}
+
+      {/* right form side */}
+
       <div className="a-right">
         <form className="infoForm authForm" onSubmit={handleSubmit}>
-          <h3>{isSignUp ? "Sign Up" : "Log In"}</h3>
-
+          <h3>{isSignUp ? "Register" : "Login"}</h3>
           {isSignUp && (
             <div>
               <input
+                required
                 type="text"
                 placeholder="First Name"
                 className="infoInput"
                 name="firstname"
-                onChange={handleChange}
                 value={data.firstname}
+                onChange={handleChange}
               />
               <input
+                required
                 type="text"
                 placeholder="Last Name"
                 className="infoInput"
                 name="lastname"
-                onChange={handleChange}
                 value={data.lastname}
+                onChange={handleChange}
               />
             </div>
           )}
 
           <div>
             <input
+              required
               type="text"
+              placeholder="Username"
               className="infoInput"
               name="username"
-              placeholder="Usernames"
-              onChange={handleChange}
               value={data.username}
+              onChange={handleChange}
             />
           </div>
-
           <div>
             <input
+              required
               type="password"
               className="infoInput"
-              name="password"
               placeholder="Password"
-              onChange={handleChange}
+              name="password"
               value={data.password}
+              onChange={handleChange}
             />
             {isSignUp && (
               <input
+                required
                 type="password"
                 className="infoInput"
                 name="confirmpass"
                 placeholder="Confirm Password"
                 onChange={handleChange}
-                value={data.confirmpass}
               />
             )}
           </div>
+
           <span
             style={{
-              display: confirmpass ? "none" : "block",
               color: "red",
               fontSize: "12px",
-              marginRight: "5px",
               alignSelf: "flex-end",
+              marginRight: "5px",
+              display: confirmPass ? "none" : "block",
             }}
           >
-            * Confirm password is not same
-            {/* Toast(" * Confirm password is not same") */}
+            *Confirm password is not same
           </span>
-
           <div>
             <span
-              style={{ fontSize: "12px", cursor: "pointer" }}
+              style={{
+                fontSize: "12px",
+                cursor: "pointer",
+                textDecoration: "underline",
+              }}
               onClick={() => {
-                SetIsSignUp((prev) => !prev);
                 resetForm();
+                setIsSignUp((prev) => !prev);
               }}
             >
               {isSignUp
-                ? "Already have an account. Login!"
-                : "Don't have an account yet? Sign up"}
+                ? "Already have an account Login"
+                : "Don't have an account Sign up"}
             </span>
+            <button
+              className="button infoButton"
+              type="Submit"
+              disabled={loading}
+            >
+              {loading ? "Loading..." : isSignUp ? "SignUp" : "Login"}
+            </button>
           </div>
-          <button
-            className="button infoButton"
-            type="submit"
-            disabled={loading}
-          >
-            {loading ? "Loading..." : isSignUp ? "Sign Up" : "Sign In"}
-          </button>
         </form>
       </div>
     </div>

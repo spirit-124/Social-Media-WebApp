@@ -1,13 +1,14 @@
 import mongoose from "mongoose";
 
-const PostSchema = mongoose.Schema(
+const postSchema = mongoose.Schema(
   {
-    userId: {
-      required: true,
-      type: String,
-    },
-    desc: String,
+    userId: { type: String, required: true },
+    desc: {type: String, required : true},
     likes: [],
+    createdAt: {
+      type: Date,
+      default: new Date(),
+    },
     image: String,
   },
   {
@@ -15,5 +16,6 @@ const PostSchema = mongoose.Schema(
   }
 );
 
-const PostModel = mongoose.model("Posts", PostSchema);
+var PostModel = mongoose.model("Posts", postSchema);
+
 export default PostModel;

@@ -1,11 +1,11 @@
 import React, { useRef, useState } from "react";
 import ChatBox from "../../components/ChatBox/ChatBox";
-import Conversation from "../../components/conversation/Conversation";
+import Conversation from "../../components/Coversation/Conversation";
 import LogoSearch from "../../components/LogoSearch/LogoSearch";
-import NavIcons from "../../components/navIcons/NavIcons";
+import NavIcons from "../../components/NavIcons/NavIcons";
 import "./Chat.css";
 import { useEffect } from "react";
-import { userChat } from "../../api/ChatRequest";
+import { userChats } from "../../api/ChatRequests";
 import { useDispatch, useSelector } from "react-redux";
 import { io } from "socket.io-client";
 
@@ -23,7 +23,7 @@ const Chat = () => {
   useEffect(() => {
     const getChats = async () => {
       try {
-        const { data } = await userChat(user._id);
+        const { data } = await userChats(user._id);
         setChats(data);
       } catch (error) {
         console.log(error);
@@ -43,18 +43,21 @@ const Chat = () => {
 
   // Send Message to socket server
   useEffect(() => {
-    if (sendMessage !== null) {
-      socket.current.emit("send-message", sendMessage);
-    }
+    if (sendMessage!==null) {
+      socket.current.emit("send-message", sendMessage);}
   }, [sendMessage]);
+
 
   // Get the message from socket server
   useEffect(() => {
     socket.current.on("recieve-message", (data) => {
-      console.log(data);
+      console.log(data)
       setReceivedMessage(data);
-    });
+    }
+
+    );
   }, []);
+
 
   const checkOnlineStatus = (chat) => {
     const chatMember = chat.members.find((member) => member !== user._id);
